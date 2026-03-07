@@ -33,17 +33,9 @@ optimizations enabled (**-Ofast**).
 
 ## Installation and execution
 
-Copy the built `.elf` file and the [icon](BlinkLed/Storage/mk_blinkLed.bmp) to the `mk/apps/blinkLed` directory on the storage device (SD card or USB flash drive) used by the target board.
+Copy the built `.elf` file and the [icon](BlinkLed/Storage/) to the `mk/apps/blinkLed` directory on the storage device (SD card or USB flash drive) used by the target board.
 
 Once Mk is running, **BlinkLed** is installed by default. Click on the icon to run the application.
-
-To stop the application, use the following command in the shell :
-
-```
-terminate <pid>
-```
-
-The PID is displayed by `get-apps`.
 
 ---
 
