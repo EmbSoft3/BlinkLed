@@ -4,38 +4,65 @@
 
 ---
 
-## Build
+## Installation
 
-**BlinkLed** can be built using the [makefile](BlinkLed/Make/makefile) file on the repository.
+Build the application (see [Build](#build) below), then copy `blinkLedRelease.elf` and its
+icon `mk_blinkLed.bmp` to the Mk file system at:
 
-The variable **TOOLCHAIN\_PATH** must be updated with the path of the ARM toolchain.
-The variable **INCLUDES\_API\_PATH** must be updated with the
-[include path](https://github.com/EmbSoft3/Mk/tree/main/Mk/Includes) of
-the **Mk** operating system.
+```
+mk/apps/blinkLed/
+```
 
-First, issue a **make clean** command then build the target with **make all**.
-
-This produces `blinkLedRelease.elf` in `BlinkLed/Make/`. 
-The application is compiled as a position-independent shared object (`-fPIC -shared`) and is relocatable into any 64 KB SDRAM page by the Mk dynamic loader.
-
-Currently versions of compiler used are the followings:
-
-* **gcc** arm-none-eabi-gcc (GNU Arm Embedded Toolchain 10.3-2021.10) 10.3.1
-  20210824 (release)
-* **g++** arm-none-eabi-g++ (GNU Arm Embedded Toolchain 10.3-2021.10) 10.3.1
-  20210824 (release)
-* **make** GNU Make 4.4.1 Built for Windows32
-
-Please note, that by default, the application is compiled in release mode with
-optimizations enabled (**-Ofast**).
+This path corresponds to [`Mk/Storage/mk/apps/blinkLed/`](https://github.com/EmbSoft3/Mk/tree/main/Mk/Storage/mk/apps/blinkLed)
+in the Mk repository. Once installed, BlinkLed appears in the Mk home screen application list.
 
 ---
 
-## Installation and execution
+## Build
 
-Copy the built `.elf` file and the [icon](BlinkLed/Storage/) to the `mk/apps/blinkLed` directory on the storage device (SD card or USB flash drive) used by the target board.
+### Requirements
 
-Once Mk is running, **BlinkLed** is installed by default. Click on the icon to run the application.
+- [GNU Arm Embedded Toolchain 10.3-2021.10](https://developer.arm.com/downloads/-/gnu-rm)
+- GNU Make 4.x
+- [Mk Includes](https://github.com/EmbSoft3/Mk/tree/main/Mk/Includes)
+
+### Steps
+
+1. Open `BlinkLed/Make/makefile` and set:
+   - `TOOLCHAIN_PATH` — path to your ARM toolchain `bin/` directory
+   - `INCLUDES_API_PATH` — path to the Mk [`Includes/`](https://github.com/EmbSoft3/Mk/tree/main/Mk/Includes) directory
+
+2. Build:
+
+```
+make clean
+make all
+```
+
+This produces `blinkLedRelease.elf`, ready to install on the target.
+
+> Use the `Debug` target for a `-O0` build with full debug symbols:
+> ```
+> make Debug
+> ```
+
+The application is compiled as a position-independent shared object (`-fPIC -shared`) and is relocatable into any 64 KB SDRAM page by the Mk dynamic loader.
+
+### Compiler versions
+
+| Tool | Version |
+|------|---------|
+| `arm-none-eabi-gcc` | 10.3.1 20210824 (GNU Arm Embedded Toolchain 10.3-2021.10) |
+| `arm-none-eabi-g++` | 10.3.1 20210824 (GNU Arm Embedded Toolchain 10.3-2021.10) |
+| `make` | GNU Make 4.4.1 (Windows32) |
+
+---
+
+## Writing your own application
+
+BlinkLed is the reference example for the Mk application model. For a step-by-step guide
+on how to structure your own Mk application — descriptor, entry point, event listeners,
+memory layout — see the [Mk wiki](https://github.com/EmbSoft3/Mk/wiki/Writing-Your-First-Application).
 
 ---
 
