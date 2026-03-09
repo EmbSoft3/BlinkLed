@@ -1,0 +1,27 @@
+name: Build ARM Firmware
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupération du dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Installation du compilateur ARM
+      - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: '10.3-2021.10'   
+
+      # 3. Vérification de la version installée
+      - name: Check compiler version
+        run: arm-none-eabi-gcc --version
+
