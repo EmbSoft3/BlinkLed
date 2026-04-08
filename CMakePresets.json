@@ -1,0 +1,46 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "toolchainFile": "${sourceDir}/CMake/arm-none-eabi-toolchain.cmake",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "INCLUDES_API_PATH": "${sourceDir}/../Mk/Mk/Includes"
+      }
+    },
+    {
+      "name": "release-BlinkLed",
+      "displayName": "Release — BlinkLed",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "debug-BlinkLed",
+      "displayName": "Debug — BlinkLed",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "release-BlinkLed",
+      "configurePreset": "release-BlinkLed"
+    },
+    {
+      "name": "debug-BlinkLed",
+      "configurePreset": "debug-BlinkLed"
+    }
+  ]
+}

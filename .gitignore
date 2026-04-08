@@ -1,0 +1,12 @@
+﻿/.vs
+/.vscode
+/Build
+*.o
+*.d
+*.su
+*.elf
+*.map
+*.bin
+*.hex
+*.srec
+*.lst
