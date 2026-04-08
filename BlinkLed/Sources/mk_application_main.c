@@ -1,6 +1,6 @@
 /**
 *
-* @copyright Mk - Copyright (C) 2017-2019 RENARD Mathieu.
+* @copyright Mk - Copyright (C) 2017-2026 RENARD Mathieu.
 *
 * This file is part of Mk.
 *
@@ -44,12 +44,12 @@ static void gpio_toogle ( void )
 {
    if ( var == 0 )
    {
-      mk_gpio_set ( K_MK_GPIO_PORTF, 10, 0, K_MK_NULL );
+      mk_gpio_set ( K_MK_GPIO_SYSID, K_MK_GPIO_PIN_LED1, 0, K_MK_NULL );
       var = 1;
    }
    else
    {
-      mk_gpio_set ( K_MK_GPIO_PORTF, 10, 1, K_MK_NULL );
+      mk_gpio_set ( K_MK_GPIO_SYSID, K_MK_GPIO_PIN_LED1, 1, K_MK_NULL );
       var = 0;
    }
 
@@ -77,6 +77,9 @@ void main ( T_mkAddr p_param )
    /* Déclaration d'un pointeur de chaine de caractères */
    T_str8 l_arguments = K_MK_NULL;
 
+   /* Déclaration d'une structure de configuration */
+   T_mkGPIOSetting l_setting = { K_MK_GPIO_OUTPUT, K_MK_GPIO_PUSHPULL, K_MK_GPIO_PULLUP };
+
    /* Déclaration d'un pointeur d'application */
    T_mkApplication* l_application = ( T_mkApplication* ) p_param;
 
@@ -88,6 +91,9 @@ void main ( T_mkAddr p_param )
 
    /* Conversion du paramètre en entier */
    l_rate = ( uint32_t ) mk_utils_atoi ( ( T_str8 ) l_argv, 10 );
+
+   /* Configuration de la broche connectée au voyant en sortie */
+   mk_gpio_setup ( K_MK_GPIO_SYSID, K_MK_GPIO_PIN_LED1, &l_setting, K_MK_NULL );
 
    /* Boucle pour toujours */
    while (1)
