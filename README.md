@@ -1,11 +1,11 @@
 # BlinkLed
-**BlinkLed** is a minimal dynamic application for the [Mk](https://github.com/EmbSoft3/Mk) OS. It blinks the user LED of the **STM32F746G-Eval2** board and is intended as a getting-started example showing how to build, install, and run an external `.elf` application on top of Mk.
+**BlinkLed** is a minimal dynamic application for the [Mk](https://github.com/EmbSoft3/Mk) operating system. It blinks the user LED board and is intended as a getting-started example showing how to build, install, and run an external `.elf` application on top of Mk.
 
 ---
 
 ## Installation
 
-Build the application (see [Build](#build) below), then copy `blinkLedRelease.elf` and its
+Build the application (see [Build](#build) below), then copy `blinkLed.elf` and its
 icon `mk_blinkLed.bmp` to the Mk file system at:
 
 ```
@@ -21,68 +21,62 @@ in the Mk repository. Once installed, BlinkLed appears in the Mk home screen app
 
 ### Requirements
 
-#### All platforms
 - [GNU Arm Embedded Toolchain 10.3-2021.10](https://developer.arm.com/downloads/-/gnu-rm) — must be added to your `PATH`
-- GNU Make 4.3
-- [Mk Includes](https://github.com/EmbSoft3/Mk/tree/main/Mk/Includes)
+- CMake ≥ 3.25
+- Ninja
+- [Mk Includes](https://github.com/EmbSoft3/Mk/tree/main/Mk/Includes) — must be present at `../Mk/Mk/Includes` relative to the project root
 
-#### Windows only (one of the following)
-- [MSYS2](https://www.msys2.org/) *(recommended)* — provides `sh`, `find`, `rm` and other Unix tools required by the Makefile
-- [Git for Windows](https://git-scm.com/) — Git Bash ships the same Unix tools
+### Build system
 
-> The Makefile automatically detects MSYS2 or Git Bash at their default installation
-> paths (`C:/msys64` and `C:/Program Files/Git`). If your installation is elsewhere,
-> update `MSYS2_BIN` or `GITBASH_BIN` at the top of `BlinkLed/Make/Makefile`.
+The project uses **CMake** with presets defined in `CMakePresets.json`:
+
+| Preset | Type | Description |
+|--------|------|-------------|
+| `release-BlinkLed` | Release | Optimised build (`-Ofast`), stripped |
+| `debug-BlinkLed` | Debug | Unoptimised build (`-O0 -g3`) with full debug symbols |
 
 ### Steps
 
-1. Clone the repository and make sure the [Mk Includes](https://github.com/EmbSoft3/Mk/tree/main/Mk/Includes) directory is present at `../../Mk/Mk/Includes` relative to the `Make` directory, or update `INCLUDES_API_PATH` in `BlinkLed/Make/Makefile` accordingly.
+1. Make sure `arm-none-eabi-gcc` is in your `PATH`:
+   ```bash
+   arm-none-eabi-gcc --version
+   ```
 
-2. Add `arm-none-eabi-gcc` to your `PATH` (verify with `arm-none-eabi-gcc --version`).
+2. Make sure the [Mk Includes](https://github.com/EmbSoft3/Mk/tree/main/Mk/Includes) directory
+   is present at `../Mk/Mk/Includes` relative to the project root, or update `INCLUDES_API_PATH`
+   in `CMakePresets.txt` accordingly.
 
-3. Build:
+3. Configure the project using the desired preset:
+   ```bash
+   cmake --preset release-BlinkLed
+   ```
 
-```bash
-make clean
-make all        # Release build — optimised, stripped
-```
+4. Build the firmware:
+   ```bash
+   cmake --build --preset release-BlinkLed
+   ```
 
-This produces `blinkLedRelease.elf`, ready to install on the target.
+   This produces in `build/release-BlinkLed/`:
+   - `blinkLed.elf` — position-independent shared object, ready to install on the target
+   - `blinkLed.map` — linker map file
 
-> Use the `Debug` target for a `-O0` build with full debug symbols:
+> Use the `debug-BlinkLed` preset for an unoptimised build with full debug symbols:
 > ```bash
-> make Debug
+> cmake --preset debug-BlinkLed
+> cmake --build --preset debug-BlinkLed
 > ```
 
-The application is compiled as a position-independent shared object (`-fPIC -shared`) and is relocatable into any 64 KB SDRAM page by the Mk dynamic loader.
+The application is compiled as a position-independent shared object (`-fPIC -shared`) and is
+relocatable into any 64 KB SDRAM page by the Mk dynamic loader.
 
-### Available targets
-
-| Target    | Description                                              |
-|-----------|----------------------------------------------------------|
-| `all`     | Alias for `Release`                                      |
-| `Release` | Optimised build (`-Ofast`), stripped                     |
-| `Debug`   | Unoptimised build (`-O0`) with full debug symbols        |
-| `clean`   | Remove all generated files (`.o`, `.d`, `.su`, `.elf`, `.map`) |
-
-### Compiler versions
+### Compiler versions used
 
 | Tool | Version |
 |------|---------|
 | `arm-none-eabi-gcc` | 10.3.1 20210824 (GNU Arm Embedded Toolchain 10.3-2021.10) |
 | `arm-none-eabi-g++` | 10.3.1 20210824 (GNU Arm Embedded Toolchain 10.3-2021.10) |
-| `make` | GNU Make 4.3 |
-
----
-
-## Continuous Integration
-
-Every push and pull request is automatically built by **GitHub Actions**.
-The workflow installs the GNU Arm Embedded Toolchain, runs `make Release`,
-and uploads `blinkLedRelease.elf` as a downloadable build artifact.
-
-The latest successful build artifact is available on the
-[Actions](../../actions) tab of this repository.
+| CMake | ≥ 3.25 |
+| Ninja | latest |
 
 ---
 
