@@ -90,7 +90,7 @@ K_MK_SECTION_DESCRIPTOR T_mkApplicationDynamicHeader g_mkApplicationDynamicHeade
    {
       ( T_str8 ) "BlinkLed",                                   /* Nom de l'application. */
       ( T_str8 ) "Mac Lewis",                                  /* Auteur de l'application. */
-      ( T_str8 ) "V1.1",                                       /* Version de l'application. */
+      ( T_str8 ) "V1.2",                                       /* Version de l'application. */
       ( T_str8 ) "Une simple application dynamique",           /* Description de l'application. */
       ( T_str8 ) "mk_blinkLed.bmp",                            /* Nom de l'icône de l'application. */
       K_MK_NULL                                                /* Adresse d'un bitmap */
