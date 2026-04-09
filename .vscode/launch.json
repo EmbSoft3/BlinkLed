@@ -29,7 +29,7 @@
       "loadFiles": [],
       "postLaunchCommands": [
         "set mem inaccessible-by-default off",
-        "add-symbol-file ./build/debug-BlinkLed/blinkLed.elf -o 0xc043C000"
+        "add-symbol-file ./build/debug-BlinkLed/blinkLed.elf -o 0xc13B0000"
       ],
       "runToEntryPoint": "main"
     }
