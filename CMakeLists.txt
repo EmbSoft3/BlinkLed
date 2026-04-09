@@ -253,12 +253,20 @@ target_link_options(${PROJECT_NAME} PRIVATE
 
 set(ELF_FILE "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.elf")
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND "${CMAKE_STRIP_TOOL}" -s "${ELF_FILE}"
-    COMMAND "${CMAKE_SIZE_TOOL}" --format=berkeley --totals "${ELF_FILE}"
-    COMMENT "Post-build: strip -> size"
-    VERBATIM
-)
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND "${CMAKE_STRIP_TOOL}" -s "${ELF_FILE}"
+        COMMAND "${CMAKE_SIZE_TOOL}" --format=berkeley --totals "${ELF_FILE}"
+        COMMENT "Post-build: strip -> size"
+        VERBATIM
+    )
+else()
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND "${CMAKE_SIZE_TOOL}" --format=berkeley --totals "${ELF_FILE}"
+        COMMENT "Post-build: size (no strip in Debug)"
+        VERBATIM
+    )
+endif()
 
 ################################################################################
 # Utility target 'print' (size only, no rebuild)

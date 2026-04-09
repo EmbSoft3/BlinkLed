@@ -48,7 +48,7 @@ The project uses **CMake** with presets defined in `CMakePresets.json`:
 
 3. Configure the project using the desired preset:
    ```bash
-   cmake --preset release-BlinkLed
+   cmake --preset release-BlinkLed -DINCLUDES_API_PATH="../Mk/Mk/Includes"
    ```
 
 4. Build the firmware:
@@ -77,6 +77,40 @@ relocatable into any 64 KB SDRAM page by the Mk dynamic loader.
 | `arm-none-eabi-g++` | 10.3.1 20210824 (GNU Arm Embedded Toolchain 10.3-2021.10) |
 | CMake | ≥ 3.25 |
 | Ninja | latest |
+
+---
+
+## Debugging
+
+Debugging a dynamically loaded application requires a specific GDB setup because BlinkLed is a
+position-independent shared object (`-fPIC -shared`) relocated at runtime by the Mk dynamic
+loader. GDB must be told both **which symbol file to load** and **at which address it was placed
+in SDRAM**.
+
+### Requirements
+
+- A debug build of both **Mk** and **BlinkLed** (see [Build](#build))
+- A [J-Link](https://www.segger.com/products/debug-probes/j-link/) probe
+- VSCode with the [Cortex-Debug](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug) extension
+
+### How the load address is determined
+
+BlinkLed is linked as a PIC shared object with a base address of `0x0`. At runtime, the Mk
+dynamic loader allocates one or more 64 KB memory pages and copies the application image into
+them. The effective load address therefore depends on which memory page the loader selected.
+
+To find the load address of a running BlinkLed instance, inspect the Mk allocator state in the
+debugger to retrieve the base address returned to the application. This address is the value to
+pass to GDB as the symbol offset.
+
+As a reference, the example configuration uses `0xC043C000`. Adjust this value to match the
+actual allocation reported by your Mk build.
+
+### VSCode launch configuration
+
+The following [`.vscode/launch.json`](.vscode/launch.json) configuration loads Mk symbols from
+the kernel ELF (as the primary executable) and then overlays BlinkLed symbols at the runtime
+load address using `add-symbol-file`.
 
 ---
 
