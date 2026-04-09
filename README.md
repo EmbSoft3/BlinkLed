@@ -48,7 +48,7 @@ The project uses **CMake** with presets defined in `CMakePresets.json`:
 
 3. Configure the project using the desired preset:
    ```bash
-   cmake --preset release-BlinkLed -DINCLUDES_API_PATH="../Mk/Mk/Includes"
+   cmake --preset release-BlinkLed
    ```
 
 4. Build the firmware:
